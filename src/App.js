@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-function App() {
+// Components
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+// Pages
+import Home from "./pages/Home";
+import Services from "./pages/Services";
+import About from "./pages/About";
+import Others from "./pages/Others";
+import Login from "./pages/Login";
+import Enquire from "./pages/Enquire"; // NEW PAGE
+
+export default function App() {
+  const appStyle = {
+    fontFamily: "Arial, sans-serif",
+    backgroundColor: "#f9f9f9",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+  };
+
+  const contentStyle = {
+    flex: 1,
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={appStyle}>
+      <Router>
+        <Navbar />
+        <div style={contentStyle}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/others" element={<Others />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/enquire" element={<Enquire />} /> {/* NEW ROUTE */}
+          </Routes>
+        </div>
+        <Footer />
+      </Router>
     </div>
   );
 }
-
-export default App;
