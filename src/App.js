@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -13,6 +13,7 @@ import Others from "./pages/Others";
 import Login from "./pages/Login";
 import Enquire from "./pages/Enquire";
 import Admin from "./pages/Admin";
+import Enquiries from "./pages/Enquiries"; // Admin Enquiries Page
 
 export default function App() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -35,6 +36,11 @@ export default function App() {
     flex: 1,
   };
 
+  // Protected route for admin pages
+  const ProtectedRoute = ({ children }) => {
+    return isAdmin ? children : <Navigate to="/login" replace />;
+  };
+
   return (
     <div style={appStyle}>
       <Router>
@@ -47,7 +53,24 @@ export default function App() {
             <Route path="/others" element={<Others />} />
             <Route path="/login" element={<Login setIsAdmin={setIsAdmin} />} />
             <Route path="/enquire" element={<Enquire />} />
-            <Route path="/admin" element={<Admin />} />
+
+            {/* Admin Protected Routes */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/enquiries"
+              element={
+                <ProtectedRoute>
+                  <Enquiries />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
         <Footer />

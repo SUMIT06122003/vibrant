@@ -87,6 +87,7 @@ export default function Navbar({ isAdmin, setIsAdmin }) {
           {isAdmin ? (
             <>
               <span style={{ color: "#ffb400", fontWeight: "bold" }}>Welcome, Santosh</span>
+              <Link to="/enquiries" style={menuLink}>Enquiries</Link>
               <button
                 onClick={handleLogout}
                 style={{
@@ -136,6 +137,7 @@ export default function Navbar({ isAdmin, setIsAdmin }) {
       {isMobile && isAdmin && (
         <div style={desktopMenu}>
           <span style={{ color: "#ffb400", fontWeight: "bold" }}>Welcome, Santosh</span>
+          <Link to="/enquiries" style={menuLink}>Enquiries</Link>
           <button
             onClick={handleLogout}
             style={{
