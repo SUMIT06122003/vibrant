@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ isAdmin, setIsAdmin }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const navigate = useNavigate();
 
   // Detect window size for responsive menu
   useEffect(() => {
@@ -12,6 +14,13 @@ export default function Navbar() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Logout handler
+  const handleLogout = () => {
+    localStorage.removeItem("adminLoggedIn");
+    setIsAdmin(false);
+    navigate("/login");
+  };
 
   const navbar = {
     display: "flex",
@@ -75,29 +84,72 @@ export default function Navbar() {
       {/* Desktop Menu */}
       {!isMobile && (
         <div style={desktopMenu}>
-          <Link to="/services" style={menuLink}>Services</Link>
-          <Link to="/about" style={menuLink}>About Us</Link>
-          <Link to="/others" style={menuLink}>Others</Link>
-          <Link to="/login" style={menuLink}>Login</Link>
-          <Link to="/enquire" style={menuLink}>Enquire Now</Link>
+          {isAdmin ? (
+            <>
+              <span style={{ color: "#ffb400", fontWeight: "bold" }}>Welcome, Santosh</span>
+              <button
+                onClick={handleLogout}
+                style={{
+                  backgroundColor: "#ff4d4d",
+                  color: "white",
+                  border: "none",
+                  padding: "6px 12px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/" style={menuLink}>Home</Link>
+              <Link to="/services" style={menuLink}>Services</Link>
+              <Link to="/about" style={menuLink}>About Us</Link>
+              <Link to="/others" style={menuLink}>Others</Link>
+              <Link to="/login" style={menuLink}>Login</Link>
+              <Link to="/enquire" style={menuLink}>Enquire Now</Link>
+            </>
+          )}
         </div>
       )}
 
       {/* Mobile Menu Button */}
-      {isMobile && (
-        <button style={menuButton} onClick={() => setMenuOpen(!menuOpen)}>
-          ☰
-        </button>
+      {isMobile && !isAdmin && (
+        <button style={menuButton} onClick={() => setMenuOpen(!menuOpen)}>☰</button>
       )}
 
       {/* Mobile Menu */}
-      {isMobile && (
+      {isMobile && menuOpen && !isAdmin && (
         <div style={mobileMenu}>
+          <Link to="/" style={menuLink} onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/services" style={menuLink} onClick={() => setMenuOpen(false)}>Services</Link>
           <Link to="/about" style={menuLink} onClick={() => setMenuOpen(false)}>About Us</Link>
           <Link to="/others" style={menuLink} onClick={() => setMenuOpen(false)}>Others</Link>
           <Link to="/login" style={menuLink} onClick={() => setMenuOpen(false)}>Login</Link>
           <Link to="/enquire" style={menuLink} onClick={() => setMenuOpen(false)}>Enquire Now</Link>
+        </div>
+      )}
+
+      {/* Mobile Admin Menu */}
+      {isMobile && isAdmin && (
+        <div style={desktopMenu}>
+          <span style={{ color: "#ffb400", fontWeight: "bold" }}>Welcome, Santosh</span>
+          <button
+            onClick={handleLogout}
+            style={{
+              backgroundColor: "#ff4d4d",
+              color: "white",
+              border: "none",
+              padding: "6px 12px",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            Logout
+          </button>
         </div>
       )}
     </nav>

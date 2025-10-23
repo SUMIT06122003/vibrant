@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login({ setIsAdmin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const container = {
     padding: "40px 20px",
     textAlign: "center",
+    fontFamily: "Arial, sans-serif",
   };
 
   const inputStyle = {
@@ -19,6 +20,7 @@ export default function Login() {
     margin: "10px 0",
     border: "1px solid #ccc",
     borderRadius: "4px",
+    fontSize: "1rem",
   };
 
   const buttonStyle = {
@@ -29,21 +31,32 @@ export default function Login() {
     borderRadius: "4px",
     cursor: "pointer",
     marginTop: "10px",
+    fontWeight: "bold",
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Admin logged in successfully!");
-    } catch (err) {
+    setError("");
+
+    // Hardcoded admin credentials
+    const adminEmail = "santosh@vibrantinternationallogistics.com";
+    const adminPassword = "Santosh@1245";
+
+    if (email === adminEmail && password === adminPassword) {
+      // Save login in localStorage
+      localStorage.setItem("adminLoggedIn", "true");
+      // Update Navbar state
+      setIsAdmin(true);
+      // Redirect to admin dashboard
+      navigate("/admin");
+    } else {
       setError("Invalid admin credentials. Try again.");
     }
   };
 
   return (
     <div style={container}>
-      <h2>Admin Login</h2>
+      <h2 style={{ color: "#002147" }}>Admin Login</h2>
       <form onSubmit={handleLogin}>
         <input
           type="email"
@@ -66,7 +79,7 @@ export default function Login() {
         <button type="submit" style={buttonStyle}>
           Login
         </button>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
       </form>
     </div>
   );

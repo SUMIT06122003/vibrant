@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Components
@@ -11,9 +11,18 @@ import Services from "./pages/Services";
 import About from "./pages/About";
 import Others from "./pages/Others";
 import Login from "./pages/Login";
-import Enquire from "./pages/Enquire"; // NEW PAGE
+import Enquire from "./pages/Enquire";
+import Admin from "./pages/Admin";
 
 export default function App() {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Check localStorage for admin login on app load
+  useEffect(() => {
+    const adminLoggedIn = localStorage.getItem("adminLoggedIn") === "true";
+    setIsAdmin(adminLoggedIn);
+  }, []);
+
   const appStyle = {
     fontFamily: "Arial, sans-serif",
     backgroundColor: "#f9f9f9",
@@ -29,15 +38,16 @@ export default function App() {
   return (
     <div style={appStyle}>
       <Router>
-        <Navbar />
+        <Navbar isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
         <div style={contentStyle}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
             <Route path="/about" element={<About />} />
             <Route path="/others" element={<Others />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/enquire" element={<Enquire />} /> {/* NEW ROUTE */}
+            <Route path="/login" element={<Login setIsAdmin={setIsAdmin} />} />
+            <Route path="/enquire" element={<Enquire />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </div>
         <Footer />
